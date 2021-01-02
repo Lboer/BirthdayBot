@@ -32,9 +32,17 @@ namespace Berdthday_Bot.Commands
             await ctx.Channel.SendMessageAsync("Adding!");
             var userBirthday = new BirthdayList();
             userBirthday.AddBirthday(member.ToString(), DateTime.Parse(birthday));
-            await ctx.Channel.SendMessageAsync(userBirthday.username.ToString() + userBirthday.birthday.ToString());
             birthdays.Add(userBirthday);
             await ctx.Channel.SendMessageAsync("Added!");
+        }
+
+        [Command("check")]
+        public async Task check(CommandContext ctx, int position)
+        {
+            string[] user = birthdays[position].username.Split("; ");
+            string[] usercode = user[1].Split(" (");
+            await ctx.Channel.SendMessageAsync("@" + usercode[0]);
+            await ctx.Channel.SendMessageAsync(birthdays[position].birthday.ToString("dd/MM/yyyy"));
         }
     }
 }
