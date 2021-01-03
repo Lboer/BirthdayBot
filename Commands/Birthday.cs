@@ -14,6 +14,7 @@ namespace Berdthday_Bot.Commands
     class Birthday : BaseCommandModule
     {
         public string Mention { get; }
+        public bool MentionEveryone { get; }
         private List<BirthdayList> birthdays = new List<BirthdayList>();
         [Command("congratulate")]
         [Description("Congratulate user on birthday")]
@@ -29,7 +30,6 @@ namespace Berdthday_Bot.Commands
         [Description("Add a birthday")]
         public async Task add(CommandContext ctx, DiscordMember member, string birthday)
         {
-            await ctx.Channel.SendMessageAsync("Adding!");
             var userBirthday = new BirthdayList();
             userBirthday.AddBirthday(member.ToString(), DateTime.Parse(birthday));
             birthdays.Add(userBirthday);
@@ -37,12 +37,13 @@ namespace Berdthday_Bot.Commands
         }
 
         [Command("check")]
-        public async Task check(CommandContext ctx, int position)
+        public async Task check(CommandContext ctx, DiscordMember user)
         {
-            string[] user = birthdays[position].username.Split("; ");
-            string[] usercode = user[1].Split(" (");
-            await ctx.Channel.SendMessageAsync("@" + usercode[0]);
-            await ctx.Channel.SendMessageAsync(birthdays[position].birthday.ToString("dd/MM/yyyy"));
+            string content = $"Hey, {user.Mention}! Listen!";
+            // string[] code = birthdays[position].username.Split("; ");
+            // string[] usercode = user[1].Split(" (");
+            await ctx.Channel.SendMessageAsync(content, mentions: new IMention[] { UserMention.All });
+            // await ctx.Channel.SendMessageAsync(birthdays[position].birthday.ToString("dd/MM/yyyy"));
         }
     }
 }
