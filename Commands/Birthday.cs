@@ -37,10 +37,13 @@ namespace Berdthday_Bot.Commands
         [Command("check")]
         public async Task Check(CommandContext ctx, int position)
         {
-            string[] code = birthdays[position].username.Split("; ");
-            string[] usercode = code[0].Split("r ");
-            await ctx.Channel.SendMessageAsync("<@" + usercode[1] + ">");
-            await ctx.Channel.SendMessageAsync(birthdays[position].birthday.ToString("dd/MM/yyyy"));
+            if (DateTime.Now.ToString("dd/MM") == birthdays[position].birthday.ToString("dd/MM"))
+            {
+                string[] code = birthdays[position].username.Split("; ");
+                string[] usercode = code[0].Split("r ");
+                await ctx.Channel.SendMessageAsync("Happy Birthday <@" + usercode[1] + ">");
+                await ctx.Channel.SendMessageAsync("https://www.youtube.com/watch?v=XtIBHfOdyX0");
+            }
         }
     }
 }
