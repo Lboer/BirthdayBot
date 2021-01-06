@@ -13,6 +13,7 @@ namespace Berdthday_Bot.Commands
 {
     class Birthday : BaseCommandModule
     {
+        DateTime lastcheck;
         private List<BirthdayList> birthdays = new List<BirthdayList>();
         [Command("congratulate")]
         [Description("Congratulate user on birthday")]
@@ -37,12 +38,16 @@ namespace Berdthday_Bot.Commands
         [Command("check")]
         public async Task Check(CommandContext ctx, int position)
         {
-            if (DateTime.Now.ToString("dd/MM") == birthdays[position].birthday.ToString("dd/MM"))
+            if (lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM") || lastcheck == null)
             {
-                string[] code = birthdays[position].username.Split("; ");
-                string[] usercode = code[0].Split("r ");
-                await ctx.Channel.SendMessageAsync("Happy Birthday <@" + usercode[1] + ">");
-                await ctx.Channel.SendMessageAsync("https://www.youtube.com/watch?v=XtIBHfOdyX0");
+                lastcheck = DateTime.Now;
+                if (DateTime.Now.ToString("dd/MM") == birthdays[position].birthday.ToString("dd/MM"))
+                {
+                    string[] code = birthdays[position].username.Split("; ");
+                    string[] usercode = code[0].Split("r ");
+                    await ctx.Channel.SendMessageAsync("Happy Birthday <@" + usercode[1] + ">");
+                    await ctx.Channel.SendMessageAsync("https://www.youtube.com/watch?v=XtIBHfOdyX0");
+                }
             }
         }
     }
