@@ -7,12 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Berdthday_Bot.Commands
 {
     class Birthday : BaseCommandModule
     {
+        bool running = false;
         DateTime lastcheck;
         private List<BirthdayList> birthdays = new List<BirthdayList>();
         [Command("congratulate")]
@@ -41,14 +43,32 @@ namespace Berdthday_Bot.Commands
             if (lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM") || lastcheck == null)
             {
                 lastcheck = DateTime.Now;
-                if (DateTime.Now.ToString("dd/MM") == birthdays[position].birthday.ToString("dd/MM"))
+                if (DateTime.Now.ToString("dd/MM") == birthdays[position].Birthday.ToString("dd/MM"))
                 {
-                    string[] code = birthdays[position].username.Split("; ");
+                    string[] code = birthdays[position].Username.Split("; ");
                     string[] usercode = code[0].Split("r ");
                     await ctx.Channel.SendMessageAsync("Happy Birthday <@" + usercode[1] + ">");
                     await ctx.Channel.SendMessageAsync("https://www.youtube.com/watch?v=XtIBHfOdyX0");
                 }
             }
+        }
+
+        [Command("run")]
+        public async Task Run(CommandContext ctx)
+        {
+            running = true;
+            while (running)
+            {
+                await ctx.Channel.SendMessageAsync("Frequency test");
+                Thread.Sleep(15000);
+            }
+        }
+
+        [Command("stop")]
+        public async Task Stop(CommandContext ctx)
+        {
+            running = false;
+            await ctx.Channel.SendMessageAsync("Stopping.");
         }
     }
 }

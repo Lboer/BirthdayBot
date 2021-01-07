@@ -6,13 +6,13 @@ namespace Berdthday_Bot.Models
 {
     public class BirthdayList
     {
-        public string username { get; set; }
-        public DateTime birthday { get; set; }
+        public string Username { get; set; }
+        public DateTime Birthday { get; set; }
 
-        public void AddBirthday(string User, DateTime Birthday)
+        public void AddBirthday(string User, DateTime birthday)
         {
-            username = User;
-            birthday = Birthday;
+            Username = User;
+            Birthday = birthday;
         }
     }
 }
