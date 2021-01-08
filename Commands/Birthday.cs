@@ -42,7 +42,7 @@ namespace Berdthday_Bot.Commands
         {
             if (lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM") || lastcheck == null)
             {
-                lastcheck = DateTime.Now;
+                
                 if (DateTime.Now.ToString("dd/MM") == birthdays[position].Birthday.ToString("dd/MM"))
                 {
                     string[] code = birthdays[position].Username.Split("; ");
@@ -57,10 +57,15 @@ namespace Berdthday_Bot.Commands
         public async Task Run(CommandContext ctx)
         {
             running = true;
-            while (running)
+            while (running && lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM"))
             {
-                await ctx.Channel.SendMessageAsync("Frequency test");
+                await ctx.Channel.SendMessageAsync("Starting bot...");
+                for(int i = 0; i < birthdays.Count; i++)
+                {
+                    await Check(ctx, i);
+                }
                 Thread.Sleep(15000);
+                lastcheck = DateTime.Now;
             }
         }
 
