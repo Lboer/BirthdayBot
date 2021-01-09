@@ -31,6 +31,10 @@ namespace Berdthday_Bot.Commands
         [Description("Add a birthday")]
         public async Task Add(CommandContext ctx, DiscordMember member, string birthday)
         {
+            string[] code = (member.ToString()).Split("; ");
+            string[] usercode = code[0].Split("r ");
+            string[] text = { usercode[1].ToString() , DateTime.Parse(birthday).ToString("dd/MM/yyyy")};
+            System.IO.File.WriteAllLines(@"D:\C#\Bot\Birthday\Berdthday Bot\Berdthday Bot\Text\Birthdays.txt", text);
             var userBirthday = new BirthdayList();
             userBirthday.AddBirthday(member.ToString(), DateTime.Parse(birthday));
             birthdays.Add(userBirthday);
@@ -64,7 +68,7 @@ namespace Berdthday_Bot.Commands
                 {
                     await Check(ctx, i);
                 }
-                Thread.Sleep(15000);
+                Thread.Sleep(21600000);
                 lastcheck = DateTime.Now;
             }
         }
