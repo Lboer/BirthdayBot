@@ -32,12 +32,30 @@ namespace Berdthday_Bot.Commands
         [Description("Add a birthday")]
         public async Task Add(CommandContext ctx, DiscordMember member, string birthday)
         {
+            // register locations for the main file and the temporary file that will be deleted
+            string location = @"D:\C#\Bot\Birthday\Berdthday Bot\Berdthday Bot\Text\Birthdays.txt";
+            string tempFile = @"D:\C#\Bot\Birthday\Berdthday Bot\Berdthday Bot\Text\temp.txt";
+            // get discord user code
             string[] code = (member.ToString()).Split("; ");
             string[] usercode = code[0].Split("r ");
-            using(StreamWriter sw = File.AppendText(@"D:\C#\Bot\Birthday\Berdthday Bot\Berdthday Bot\Text\Birthdays.txt"))
+            // delete line if mentioned before
+            using (var writer = new StreamWriter(tempFile))
+            foreach(string line in File.ReadLines(location))
+            {
+                if (!line.Contains(usercode[1]))
+                {
+                    writer.WriteLine(line);
+                }
+            }
+            // delete old main file, change temp file to main file.
+            File.Delete(location);
+            File.Move(tempFile, location);
+            // write the new data to text file
+            using (StreamWriter sw = File.AppendText(location))
             {
                 sw.WriteLine(usercode[1].ToString() + " " + DateTime.Parse(birthday).ToString("dd/MM/yyyy"));
             }
+            // Old way of adding, only lasts while bot remains on
             var userBirthday = new BirthdayList();
             userBirthday.AddBirthday(member.ToString(), DateTime.Parse(birthday));
             birthdays.Add(userBirthday);
