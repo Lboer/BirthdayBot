@@ -6,6 +6,7 @@ using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,8 +34,10 @@ namespace Berdthday_Bot.Commands
         {
             string[] code = (member.ToString()).Split("; ");
             string[] usercode = code[0].Split("r ");
-            string[] text = { usercode[1].ToString() , DateTime.Parse(birthday).ToString("dd/MM/yyyy")};
-            System.IO.File.WriteAllLines(@"D:\C#\Bot\Birthday\Berdthday Bot\Berdthday Bot\Text\Birthdays.txt", text);
+            using(StreamWriter sw = File.AppendText(@"D:\C#\Bot\Birthday\Berdthday Bot\Berdthday Bot\Text\Birthdays.txt"))
+            {
+                sw.WriteLine(usercode[1].ToString() + " " + DateTime.Parse(birthday).ToString("dd/MM/yyyy"));
+            }
             var userBirthday = new BirthdayList();
             userBirthday.AddBirthday(member.ToString(), DateTime.Parse(birthday));
             birthdays.Add(userBirthday);
