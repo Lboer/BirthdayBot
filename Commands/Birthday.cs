@@ -17,7 +17,7 @@ namespace Berdthday_Bot.Commands
     {
         bool running = false;
         DateTime lastcheck;
-        private List<BirthdayList> birthdays = new List<BirthdayList>();
+
         [Command("congratulate")]
         [Description("Congratulate user on birthday")]
         public async Task Congratulate(CommandContext ctx, DiscordMember member)
@@ -40,24 +40,37 @@ namespace Berdthday_Bot.Commands
             {
                 sw.WriteLine(GetUserCode(member) + " " + DateTime.Parse(birthday).ToString("dd/MM/yyyy"));
             }
-            // Old way of adding, only lasts while bot remains on
-            var userBirthday = new BirthdayList();
-            userBirthday.AddBirthday(member.ToString(), DateTime.Parse(birthday));
-            birthdays.Add(userBirthday);
             await ctx.Channel.SendMessageAsync("Added!");
         }
 
         [Command("check")]
-        public async Task Check(CommandContext ctx, int position)
+        public async Task Check(CommandContext ctx)
         {
             if (lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM") || lastcheck == null)
             {
-                if (DateTime.Now.ToString("dd/MM") == birthdays[position].Birthday.ToString("dd/MM"))
+                // read through the file containing users and birthdays
+                string[] file = File.ReadAllLines(@"D:\C#\Bot\Birthday\Berdthday Bot\Berdthday Bot\Text\Birthdays.txt");
+                List<string> birthdayList = new List<string>();
+                List<string> userList = new List<string>();
+                for (int i = 0; i < file.Length; i++)
                 {
-                    string[] code = birthdays[position].Username.Split("; ");
-                    string[] usercode = code[0].Split("r ");
-                    await ctx.Channel.SendMessageAsync("Happy Birthday <@" + usercode[1] + ">");
-                    await ctx.Channel.SendMessageAsync("https://www.youtube.com/watch?v=XtIBHfOdyX0");
+                    if(file[i].Length > 2)
+                    {
+                        userList.Add(file[i].Split(" ")[0]);
+                        birthdayList.Add(file[i].Split(" ")[1]);
+                    }
+                }
+                // make an array of birthdays and users
+                string[] birthdays = birthdayList.ToArray();
+                string[] users = userList.ToArray();
+                // if today is someone's birthday, message them.
+                for (int i = 0; i < birthdays.Length; i++)
+                {
+                    if (DateTime.Now.ToString("dd/MM") == DateTime.Parse(birthdays[i]).ToString("dd/MM"))
+                    {
+                        await ctx.Channel.SendMessageAsync("Happy Birthday <@" + users[i] + ">");
+                        await ctx.Channel.SendMessageAsync("https://www.youtube.com/watch?v=XtIBHfOdyX0");
+                    }
                 }
             }
         }
@@ -69,11 +82,7 @@ namespace Berdthday_Bot.Commands
             while (running && lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM"))
             {
                 await ctx.Channel.SendMessageAsync("Starting bot...");
-                //for (int i = 0; i < File.ReadAllLines(@"D:\C#\Bot\Birthday\Berdthday Bot\Berdthday Bot\Text\Birthdays.txt").Length - 1; i++)
-                for (int i = 0; i < birthdays.Count; i++)
-                {
-                    await Check(ctx, i);
-                }
+                await Check(ctx);
                 Thread.Sleep(21600000);
                 lastcheck = DateTime.Now;
             }
