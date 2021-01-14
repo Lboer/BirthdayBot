@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Berdthday_Bot
+﻿namespace Berdthday_Bot
 {
     class Program
     {

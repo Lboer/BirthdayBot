@@ -1,13 +1,9 @@
-﻿using Berdthday_Bot.Models;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
-using DSharpPlus.Interactivity.Extensions;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,16 +13,6 @@ namespace Berdthday_Bot.Commands
     {
         bool running = false;
         DateTime lastcheck;
-
-        [Command("congratulate")]
-        [Description("Congratulate user on birthday")]
-        public async Task Congratulate(CommandContext ctx, DiscordMember member)
-        {
-            await ctx.Channel
-                .SendMessageAsync("Happy Birthday " + member.Mention + "!").ConfigureAwait(false);
-            await ctx.Channel
-                .SendMessageAsync("https://www.youtube.com/watch?v=XtIBHfOdyX0").ConfigureAwait(false);
-        }
 
         [Command("add")]
         [Description("Add a birthday")]
@@ -44,6 +30,7 @@ namespace Berdthday_Bot.Commands
         }
 
         [Command("check")]
+        [Description("This function will only react once a day. It can be called manually or via the \"run\" command")]
         public async Task Check(CommandContext ctx)
         {
             if (lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM") || lastcheck == null)
@@ -76,6 +63,7 @@ namespace Berdthday_Bot.Commands
         }
 
         [Command("run")]
+        [Description("Turn on the bot to check for birthdays daily")]
         public async Task Run(CommandContext ctx)
         {
             running = true;
@@ -89,6 +77,7 @@ namespace Berdthday_Bot.Commands
         }
 
         [Command("stop")]
+        [Description("Turn off the bot")]
         public async Task Stop(CommandContext ctx)
         {
             running = false;
@@ -96,6 +85,7 @@ namespace Berdthday_Bot.Commands
         }
 
         [Command("delete")]
+        [Description("Delete the mentioned user's birthday")]
         public async Task Delete(CommandContext ctx, DiscordMember member)
         {
             Delete(GetUserCode(member));
