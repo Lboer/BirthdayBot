@@ -98,6 +98,20 @@ namespace Berdthday_Bot.Commands
             }
         }
 
+        [Command("status")]
+        [Description("Check if the bot is running or not")]
+        public async Task Status(CommandContext ctx)
+        {
+            if (running)
+            {
+                await ctx.Channel.SendMessageAsync("The bot is up and running.");
+            }
+            else
+            {
+                await ctx.Channel.SendMessageAsync("The bot is offline.");
+            }
+        }
+
         [Command("stop")]
         [Description("Turn off the bot")]
         public async Task Stop(CommandContext ctx)
