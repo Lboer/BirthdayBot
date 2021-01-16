@@ -81,13 +81,21 @@ namespace Berdthday_Bot.Commands
         public async Task Run(CommandContext ctx)
         {
             running = true;
-            while (running && lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM"))
+            while (running)
             {
-                await Check(ctx);
-                lastcheck = DateTime.Now;
-                Console.WriteLine("After running, today it is: " + lastcheck);
+                if(lastcheck.ToString("dd/MM") != DateTime.Now.ToString("dd/MM") || lastcheck == null)
+                { 
+                    await Check(ctx);
+                    lastcheck = DateTime.Now;
+                    Console.WriteLine("After running, today it is: " + lastcheck);
+                    Thread.Sleep(21600000);
+                }
+                else
+                {
+                    Console.WriteLine("Still running, today it is: " + lastcheck);
+                    Thread.Sleep(21600000);
+                }
             }
-            Thread.Sleep(21600000);
         }
 
         [Command("stop")]
