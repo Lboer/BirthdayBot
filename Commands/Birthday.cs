@@ -17,6 +17,7 @@ namespace Berdthday_Bot.Commands
         string location = @"temp/Birthdays.txt";
         CultureInfo provider = CultureInfo.InvariantCulture;
 
+        // add a person's discord usercode and their birthday to the .txt file
         [Command("add")]
         [Description("Add a birthday")]
         public async Task Add(CommandContext ctx, DiscordMember member, string birthday)
@@ -41,6 +42,7 @@ namespace Berdthday_Bot.Commands
             await ctx.Channel.SendMessageAsync("Added!");
         }
 
+        // check manually if it is someone's birthday
         [Command("check")]
         [Description("This function will only react once a day. It can be called manually or via the \"run\" command")]
         public async Task Check(CommandContext ctx)
@@ -76,6 +78,7 @@ namespace Berdthday_Bot.Commands
             }
         }
 
+        // run the bot and keep it on, bot will congratulate in the same channel it started to run.
         [Command("run")]
         [Description("Turn on the bot to check for birthdays daily")]
         public async Task Run(CommandContext ctx)
@@ -98,6 +101,7 @@ namespace Berdthday_Bot.Commands
             }
         }
 
+        // check if the bot is running, bot replies in channel
         [Command("status")]
         [Description("Check if the bot is running or not")]
         public async Task Status(CommandContext ctx)
@@ -112,6 +116,7 @@ namespace Berdthday_Bot.Commands
             }
         }
 
+        // stop the bot from running daily
         [Command("stop")]
         [Description("Turn off the bot")]
         public async Task Stop(CommandContext ctx)
@@ -120,6 +125,7 @@ namespace Berdthday_Bot.Commands
             await ctx.Channel.SendMessageAsync("Stopping.");
         }
 
+        // delete a user's discord usercode and their birthday from the .txt file
         [Command("delete")]
         [Description("Delete the mentioned user's birthday")]
         public async Task Delete(CommandContext ctx, DiscordMember member)
@@ -128,6 +134,7 @@ namespace Berdthday_Bot.Commands
             await ctx.Channel.SendMessageAsync("Deleted birthday.");
         }
 
+        // "Delete" function, rewrites everything apart from mentioned user
         public void Delete(string user)
         {
             string tempFile = @"temp/temp.txt";
@@ -146,6 +153,7 @@ namespace Berdthday_Bot.Commands
             Console.WriteLine("Deletion/ overwrite worked correctly");
         }
 
+        // Get the discord usercode via inputting a DiscordMember
         public string GetUserCode(DiscordMember member)
         {
             string[] code = (member.ToString()).Split("; ");
