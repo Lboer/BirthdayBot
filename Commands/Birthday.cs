@@ -156,6 +156,8 @@ namespace Berdthday_Bot.Commands
         // Get the discord usercode via inputting a DiscordMember
         public string GetUserCode(DiscordMember member)
         {
+            // casting a member to a string causes the format: "Member usercode; user#1234"
+            // We are after the usercode, without the string "Member", so we split the usercode up in to, after "r ".
             string[] code = (member.ToString()).Split("; ");
             string[] usercode = code[0].Split("r ");
             return usercode[1];
